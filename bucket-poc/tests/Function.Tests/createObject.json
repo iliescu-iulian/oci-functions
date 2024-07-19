@@ -1,0 +1,25 @@
+{
+    "eventType": "com.oraclecloud.objectstorage.createobject",
+    "cloudEventsVersion": "0.1",
+    "eventTypeVersion": "2.0",
+    "source": "ObjectStorage",
+    "eventTime": "2024-07-18T10:47:48Z",
+    "contentType": "application/json",
+    "data": {
+        "compartmentId": "ocid1.compartment.oc1..aaaaaaaaoe3jbtnxucchbrfj3bveo5mbpaor6yfdb3p47ehsps4ccdkn4una",
+        "compartmentName": "DBcaandrei",
+        "resourceName": "date_demo.txt",
+        "resourceId": "/n/ociateam/b/bucket-2024-06-26-iulian/o/date_demo.txt",
+        "availabilityDomain": "FRA-AD-3",
+        "additionalDetails": {
+            "bucketName": "bucket-2024-06-26-iulian",
+            "versionId": "28f32ed9-4f94-451a-b0d4-e7d6e5222729",
+            "archivalState": "Available",
+            "namespace": "ociateam",
+            "bucketId": "ocid1.bucket.oc1.eu-frankfurt-1.aaaaaaaapkojzt7kqebgzstxjtdl5rdugfdoc4pzlrvsdw7pr4ee6it6776a",
+            "eTag": "95dadaf9-b5f3-476d-a170-c868da9b2c7e"
+        }
+    },
+    "eventID": "80488ad2-0e29-e6f5-45b4-a0ce1320c67a",
+    "extensions": { "compartmentId": "ocid1.compartment.oc1..aaaaaaaaoe3jbtnxucchbrfj3bveo5mbpaor6yfdb3p47ehsps4ccdkn4una" }
+}
