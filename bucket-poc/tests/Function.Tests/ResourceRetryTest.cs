@@ -51,11 +51,20 @@ public class ResourceRetryTest
     [TestCase("retry-me.txt.9", 9)]
     [TestCase("retry-me.txt.11", 11)]
     [TestCase("retry-me.txt.111", 111)]
-    public void RetryResourceSubsequentTimeRetryProperIndex(string resourceName, int expectedIndex)
+    public void RetryResourceSubsequentTimeRetriveProperIndex(string resourceName, int expectedIndex)
     {
         var instance = new ResourceRetry(CreateEventData(resourceName));
         Assert.AreEqual(expectedIndex, instance.RetryIndex);
         Assert.AreEqual("retry-me.txt", instance.ResourceName);
         Assert.IsTrue(instance.ShouldRetry);
+    }
+
+    [Test]
+    public void RetryResourceFromFailureFolderRetriveCorrentResourceName()
+    {
+        var resourceName = "retry-me.txt.2";
+        var instance = new ResourceRetry(CreateEventData($"failures/{resourceName}"));
+        Assert.AreEqual(2, instance.RetryIndex);
+        Assert.AreEqual("retry-me.txt", instance.ResourceName);
     }
 }

@@ -11,7 +11,8 @@ public class ResourceRetry
     public ResourceRetry(EventData data)
     {
         ResourceName = data.ResourceName;
-        if (data.ResourceName.StartsWith("retry-me.txt"))
+
+        if (data.ResourceName.StartsWith("retry-me.txt") || data.ResourceName.StartsWith("failures/"))
         {
             ShouldRetry = true;
             var fileExt = Path.GetExtension(data.ResourceName);

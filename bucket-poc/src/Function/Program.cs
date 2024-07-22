@@ -101,18 +101,20 @@ namespace Function {
             {
                 // rename file
                 _logger.Warn($"Retry file {retry.ResourceName}");
-                var req = new RenameObjectRequest
+                using(var emptyStream= new MemoryStream())
                 {
-                    NamespaceName = _namespace,
-                    BucketName = data.BucketName,
-                    RenameObjectDetails = new RenameObjectDetails
+                    var req = new PutObjectRequest
                     {
-                        SourceName = data.ResourceName,
-                        NewName = $"{retry.ResourceName}.{retry.RetryIndex + 1}"
-                    }
-                };
-                var resp= _client.RenameObject(req).Result;
-                Console.WriteLine("Rename response ETag: {0}", resp.ETag);
+                        NamespaceName = _namespace,
+                        BucketName = data.BucketName,
+                        ObjectName = $"failures/{retry.ResourceName}.{retry.RetryIndex + 1}",
+                        ContentLength = 0,
+                        PutObjectBody = emptyStream
+                    };
+                    var resp = _client.PutObject(req).Result;
+
+                    Console.WriteLine("Rename response ETag: {0}", resp.ETag);
+                }
                 return $"Object renamed to {retry.ResourceName}.{retry.RetryIndex + 1}";
             }
             else
