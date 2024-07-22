@@ -115,6 +115,18 @@ namespace Function {
 
                     Console.WriteLine("Rename response ETag: {0}", resp.ETag);
                 }
+
+                if (retry.IsInFolder)
+                {
+                    // delete current one
+                    var req = new DeleteObjectRequest
+                    {
+                        NamespaceName = _namespace,
+                        BucketName = data.BucketName,
+                        ObjectName = data.ResourceName
+                    };
+                    var resp= _client.DeleteObject(req).Result;
+                }
                 return $"Object renamed to {retry.ResourceName}.{retry.RetryIndex + 1}";
             }
             else

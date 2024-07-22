@@ -57,14 +57,23 @@ public class ResourceRetryTest
         Assert.AreEqual(expectedIndex, instance.RetryIndex);
         Assert.AreEqual("retry-me.txt", instance.ResourceName);
         Assert.IsTrue(instance.ShouldRetry);
+        Assert.IsFalse(instance.IsInFolder);
     }
 
     [Test]
-    public void RetryResourceFromFailureFolderRetriveCorrentResourceName()
+    public void RetryResourceFromFailureFolderRetrieveCorrectResourceName()
     {
         var resourceName = "retry-me.txt.2";
         var instance = new ResourceRetry(CreateEventData($"failures/{resourceName}"));
         Assert.AreEqual(2, instance.RetryIndex);
         Assert.AreEqual("retry-me.txt", instance.ResourceName);
+    }
+
+    [Test]
+    public void RetryResourceFromFailureFolderSetIsInFolder()
+    {
+        var resourceName = "retry-me.txt.1";
+        var instance = new ResourceRetry(CreateEventData($"failures/{resourceName}"));
+        Assert.IsTrue(instance.IsInFolder);
     }
 }

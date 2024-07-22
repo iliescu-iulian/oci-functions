@@ -7,6 +7,7 @@ public class ResourceRetry
     public bool ShouldRetry { get; }
     public int RetryIndex { get; }
     public string ResourceName { get; }
+    public bool IsInFolder { get; }
 
     public ResourceRetry(EventData data)
     {
@@ -18,6 +19,7 @@ public class ResourceRetry
             var fileExt = Path.GetExtension(data.ResourceName);
             if (fileExt != ".txt" && fileExt?.Length > 1)
             {
+                IsInFolder = data.ResourceName.StartsWith("failures/");
                 if (int.TryParse(fileExt.Substring(1), out int index))
                 {
                     RetryIndex= index;
