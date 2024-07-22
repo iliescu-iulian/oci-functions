@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Fnproject.Fn.Fdk;
 
 using System.Runtime.CompilerServices;
@@ -52,7 +53,7 @@ namespace Function {
                 return GetBucketList();
             }
 
-            Console.WriteLine($"Invoked for bucket '{eventData}'");
+            //Console.WriteLine($"Invoked for bucket '{eventData}'");
 
             return GetBucketContent(eventData);
         }
@@ -85,10 +86,52 @@ namespace Function {
             }
         }
 
+        private string HandleObjectStorageEvent(EventData data)
+        {
+            var retry = new ResourceRetry(data);
+            if (retry.ShouldRetry && retry.RetryIndex < 5)
+            {
+                // rename file
+                _logger.Warn($"Retry file {retry.ResourceName}");
+                var req = new RenameObjectRequest
+                {
+                    NamespaceName = _namespace,
+                    BucketName = data.BucketName,
+                    RenameObjectDetails = new RenameObjectDetails
+                    {
+                        SourceName = data.ResourceName,
+                        NewName = $"{retry.ResourceName}.{retry.RetryIndex + 1}"
+                    }
+                };
+                var resp= _client.RenameObject(req).Result;
+                Console.WriteLine("Rename response ETag: {0}", resp.ETag);
+            }
+            else
+            {
+                var req = new GetObjectRequest
+                {
+                    NamespaceName = _namespace,
+                    BucketName = data.BucketName,
+                    ObjectName = data.ResourceName
+                };
+                var resp= _client.GetObject(req).Result;
+                Console.WriteLine("Object download: ContentType= {0}, ContentLength= {1}, ETag= {2}", resp.ContentType, resp.ContentLength, resp.ETag);
+                //var reader = new StreamReader(resp.InputStream);
+                //reader.ReadToEnd();
+            }
+
+            return null;
+        }
+
         private string GetBucketContent(string eventData)
         {
             var data = new EventData(eventData);
             string bucketName = data.BucketName ?? eventData;
+
+            if (!string.IsNullOrEmpty(data.BucketName))
+            {
+                return HandleObjectStorageEvent(data);
+            }
 
             try
             {
