@@ -113,6 +113,7 @@ namespace Function {
                 };
                 var resp= _client.RenameObject(req).Result;
                 Console.WriteLine("Rename response ETag: {0}", resp.ETag);
+                return $"Object renamed to {retry.ResourceName}.{retry.RetryIndex + 1}";
             }
             else
             {
@@ -124,11 +125,10 @@ namespace Function {
                 };
                 var resp= _client.GetObject(req).Result;
                 Console.WriteLine("Object download: ContentType= {0}, ContentLength= {1}, ETag= {2}", resp.ContentType, resp.ContentLength, resp.ETag);
+                return new StreamReader(resp.InputStream).ReadToEnd();
                 //var reader = new StreamReader(resp.InputStream);
                 //reader.ReadToEnd();
             }
-
-            return null;
         }
 
         private string GetBucketContent(string eventData)
