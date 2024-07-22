@@ -55,7 +55,15 @@ namespace Function {
 
             //Console.WriteLine($"Invoked for bucket '{eventData}'");
 
-            return GetBucketContent(eventData);
+            try
+            {
+                return GetBucketContent(eventData);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failure: {0}\n{1}", ex.Message, ex.StackTrace);
+                return ex.Message;
+            }
         }
 
         private string GetBucketList()
