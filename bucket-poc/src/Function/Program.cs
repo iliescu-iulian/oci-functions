@@ -35,9 +35,17 @@ namespace Function {
             _client = new ObjectStorageClient(_provider);
             _namespace = Environment.GetEnvironmentVariable("NAMESPACE");
             _compartmentId= Environment.GetEnvironmentVariable("COMPARTMENT");
-            _secrets = new Secrets(_provider);
-            Console.WriteLine("BucketList.Constructor: Key='{0}', Secrets='{1}'",
-                _secrets.ConsumerKey, _secrets.ConsumerSecret);
+            try
+            {
+                _secrets = new Secrets(_provider);
+                Console.WriteLine("BucketList.Constructor: Key='{0}', Secrets='{1}'",
+                    _secrets.ConsumerKey, _secrets.ConsumerSecret);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                Console.WriteLine("Secrets failure: {0} / {1}", e.Message, e.StackTrace);
+            }
         }
 
         public string handleRequest(string eventData)
