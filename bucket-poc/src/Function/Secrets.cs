@@ -1,6 +1,7 @@
 ﻿using Oci.Common.Auth;
 using Oci.SecretsService;
 using System;
+using Oci.Common;
 using Oci.SecretsService.Requests;
 using Oci.SecretsService.Models;
 
@@ -15,7 +16,7 @@ public class Secrets
     //public string 
     public Secrets(IBasicAuthenticationDetailsProvider provider)
     {
-        _secretsClient = new SecretsClient(provider);
+        _secretsClient = new SecretsClient(provider, new ClientConfiguration());
         ConsumerSecret = GetSecret(Environment.GetEnvironmentVariable("CDI_CONSUMERSECRET_OCID"));
         ConsumerKey = GetSecret(Environment.GetEnvironmentVariable("CDI_CONSUMERKEY_OCID"));
     }
