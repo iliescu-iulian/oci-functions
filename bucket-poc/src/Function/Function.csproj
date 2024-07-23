@@ -8,5 +8,6 @@
   <ItemGroup>
   <PackageReference Include="Fnproject.Fn.Fdk" Version="1.0.28" />
   <PackageReference Include="OCI.DotNetSDK.Objectstorage" Version="90.2.0" />
+  <PackageReference Include="OCI.DotNetSDK.Secrets" Version="90.3.0" />
   </ItemGroup>
 </Project>

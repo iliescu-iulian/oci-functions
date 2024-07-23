@@ -22,6 +22,7 @@ namespace Function {
         private string _namespace;
         private string _compartmentId;
         private NLog.Logger _logger;
+        private Secrets _secrets;
 
         public BucketList()
         {
@@ -34,7 +35,9 @@ namespace Function {
             _client = new ObjectStorageClient(_provider);
             _namespace = Environment.GetEnvironmentVariable("NAMESPACE");
             _compartmentId= Environment.GetEnvironmentVariable("COMPARTMENT");
-            _logger.Info($"BucketList function created for namespace {_namespace}");
+            _secrets = new Secrets(_provider);
+            Console.WriteLine("BucketList.Constructor: Key='{0}', Secrets='{1}'",
+                _secrets.ConsumerKey, _secrets.ConsumerSecret);
         }
 
         public string handleRequest(string eventData)
@@ -113,7 +116,7 @@ namespace Function {
                     };
                     var resp = _client.PutObject(req).Result;
 
-                    Console.WriteLine("Rename response ETag: {0}", resp.ETag);
+                    Console.WriteLine("Upload response ETag: {0}", resp.ETag);
                 }
 
                 if (retry.IsInFolder)
@@ -127,7 +130,7 @@ namespace Function {
                     };
                     var resp= _client.DeleteObject(req).Result;
                 }
-                return $"Object renamed to {retry.ResourceName}.{retry.RetryIndex + 1}";
+                return $"Object uploaded to {retry.ResourceName}.{retry.RetryIndex + 1}";
             }
             else
             {
